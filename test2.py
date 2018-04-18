@@ -26,7 +26,7 @@ def get_datetime():
     #
     # latest = max((t1, t2)) # t1, in this case
 
-get_datetime()
+
 
 #ENTER YOUR KEY HERE
 
@@ -54,15 +54,54 @@ CACHE_DICTION = {}
 # except:
 #     CACHE_DICTION = {}
 #
-def params_unique_combination(baseurl, params):
-    alphabetized_keys = sorted(params.keys())
-    res = []
-    for k in alphabetized_keys:
-        res.append("{}-{}".format(k, params[k]))
-    return baseurl + "_".join(res)
 
-#Code for Part 1:Get Tweets
+def get_games_by_releaseYear(releaseYear):
 
+    result = igdb.release_dates({
+        'filters' :{
+            "[y][eq]"    : releaseYear,
+
+        },
+        'expand': "game",
+        'order':"date:desc",
+        'fields': ["game.name", "game.genres"],
+        'scroll':1,
+        'limit':50
+    })
+
+    list_of_games = []
+    xcount = result.headers["X-Count"]
+    timestoscroll = (math.ceil((int(xcount)) / 50)) - 1
+    for x in range(timestoscroll):
+        for y in result.body:
+            empty_dict = {}
+            game = y["game"]
+            try:
+                empty_dict["id"] = game["id"]
+            except:
+                empty_dict["id"] = ""
+            try:
+                empty_dict["name"] = game["name"]
+            except:
+                empty_dict["name"] = ""
+            try:
+                empty_dict["genres"] = game["genres"]
+            except:
+                empty_dict["genres"] =""
+            empty_dict["releaseYear"] = releaseYear
+            list_of_games.append(empty_dict)
+        result = igdb.scroll(result)
+
+    # loaded_json = json.loads(newresult.text)
+    dumped_json = json.dumps(list_of_games, indent = 4)
+    fw = open(games_cache,"w")
+    fw.write(dumped_json)
+    fw.close()
+    CACHE_DICTION["game_released_in_" + str(releaseYear)] = time.strftime("%a %b %d %H:%M:%S %Y")
+    dumped_json = json.dumps(CACHE_DICTION, indent = 4)
+    fw = open(CACHE_FNAME,"w")
+    fw.write(dumped_json)
+    fw.close()
 
 
 
@@ -73,7 +112,7 @@ def params_unique_combination(baseurl, params):
 # resp = requests.get(baseurl, params = params, headers = headers )
 # cache = json.loads(resp.text)
 # print(cache)
-def check_platform_cache():
+def is_platform_cache_old(): #if cache time stamp is older than 6 months, return True value to get data again
     now = time.strftime("%a %b %d %H:%M:%S %Y")
     tdelta = datetime.strptime(now, '%a %b %d %H:%M:%S %Y') - datetime.strptime(CACHE_DICTION["platform_time"], '%a %b %d %H:%M:%S %Y')
     if tdelta.total_seconds > 1340000:
@@ -158,8 +197,10 @@ def init_db():
     statement = ' CREATE TABLE `Games` ( '
     statement += '   `Id`        INTEGER UNIQUE PRIMARY KEY,'
     statement += '   `Name`  TEXT,'
-    statement += '  `UserRating`    TEXT,'
-    statement += '  `ReleaseDate`  TEXT ,'
+    statement += '  `Genre1`    TEXT,'
+    statement += '  `Genre2`    TEXT,'
+    statement += '  `Genre3`    TEXT,'
+    statement += '  `ReleaseYear`  TEXT ,'
     statement += '  `URL`    TEXT );'
 
 
@@ -204,30 +245,35 @@ def init_db():
 
 
 
-# def add_games_data():
-#     # Connect to choc database
-#     conn = sqlite3.connect('test.db')
-#     cur = conn.cursor()
-#
-#
-#     ### Add countries data first
-#     with open('games.json') as json_data:
-#         g = json.load(json_data)
-#
-#
-#     for game in g:
-#
-#
-#         #Add code to insert each of these data of interest to the games table
-#         params= (game["id"], game["name"], game["rating"], game["release_date"], game["url"] )
-#         try:
-#             cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?)", params)
-#
-#         except:
-#             print("168")
-#             pass #bandaid for repeat Tweets
-#     conn.commit()
-#     conn.close()
+def add_games_data():
+    # Connect to choc database
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+
+
+    ### Add countries data first
+    with open(games_cache) as json_data:
+        g = json.load(json_data)
+
+
+    for game in g:
+        list_of_genres = []
+        for x in range(3):
+            try:
+                list_of_genres.append(game["genres"][x])
+            except:
+                list_of_genres.append("")
+
+        #Add code to insert each of these data of interest to the games table
+        params= (game["id"], game["name"], list_of_genres[0], list_of_genres[1], list_of_genres[2], game["releaseYear"], "" )
+        try:
+            cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?, ?, ?)", params)
+
+        except Exception as ex:
+            print(ex)
+            pass #bandaid for repeat Tweets
+    conn.commit()
+    conn.close()
 
 def add_platform_data():
     # Connect to choc database
@@ -255,8 +301,10 @@ def add_platform_data():
     conn.close()
 
 # get_platform_info()
-# init_db()
-# add_platform_data()
+# get_games_by_releaseYear(2017)
+init_db()
+add_platform_data()
+add_games_data()
 
 
 
