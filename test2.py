@@ -42,6 +42,7 @@ games_cache_2014 = '2014games.json'
 games_cache_2015 = '2015games.json'
 games_cache_2016 = '2016games.json'
 games_cache_2017 = '2017games.json'
+genre_cache = 'genre.json'
 platform_cache = 'platform.json'
 CACHE_FNAME = "cache.json"
 CACHE_DICTION = {}
@@ -122,15 +123,43 @@ def get_games_by_releaseYear(releaseYear):
     fw.close()
 
 def get_genres():
-    result = igdb.genres({
+    result = igdb.genres({ #there are only 20 genres
 
         'fields': "name",
-        'scroll':1,
-        'limit':50
+        'limit':20
     })
-    print(result.body)
 
-get_genres()
+    list_of_genres = []
+    # xcount = result.headers["X-Count"]
+    # print(xcount)
+    # timestoscroll = (math.ceil((int(xcount)) / 20)) - 1
+    # print(timestoscroll)
+    for x in result.body:
+        empty_dict = {}
+        try:
+
+            empty_dict["id"] = x["id"]
+        except:
+            empty_dict["id"] = ""
+        try:
+            empty_dict["name"] = x["name"]
+        except:
+            empty_dict["name"] = ""
+        list_of_genres.append(empty_dict)
+
+
+    # loaded_json = json.loads(newresult.text)
+    dumped_json = json.dumps(list_of_genres, indent = 4)
+    fw = open(genre_cache,"w")
+    fw.write(dumped_json)
+    fw.close()
+    CACHE_DICTION["genre"] = time.strftime("%a %b %d %H:%M:%S %Y")
+    dumped_json = json.dumps(CACHE_DICTION, indent = 4)
+    fw = open(CACHE_FNAME,"w")
+    fw.write(dumped_json)
+    fw.close()
+
+
 def is_platform_cache_old(): #if cache time stamp is older than 6 months, return True value to get data again
     now = time.strftime("%a %b %d %H:%M:%S %Y")
     tdelta = datetime.strptime(now, '%a %b %d %H:%M:%S %Y') - datetime.strptime(CACHE_DICTION["platform_time"], '%a %b %d %H:%M:%S %Y')
@@ -210,11 +239,13 @@ def init_db():
     statement = '''
         DROP TABLE IF EXISTS 'Platforms';
     '''
-
+    cur.execute(statement)
+    conn.commit()
     statement = '''
         DROP TABLE IF EXISTS 'ESRB';
     '''
-
+    cur.execute(statement)
+    conn.commit()
     statement = '''
         DROP TABLE IF EXISTS 'Genres';
     '''
@@ -268,7 +299,7 @@ def init_db():
         pass
 
     statement = ' CREATE TABLE `Genre` ( '
-    statement += '   `Id`        INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,'
+    statement += '   `Id`        INTEGER UNIQUE PRIMARY KEY,'
     statement += '   `Name`  TEXT);'
 
     try:
@@ -306,7 +337,24 @@ def add_esrb_ratings():
     conn.close()
 
 
+def add_genre_data():
+    # Connect to choc database
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
 
+    with open(genre_cache) as json_data:
+        g = json.load(json_data)
+
+        for genre in g:
+            params = (genre["id"], genre["name"])
+
+            try:
+                cur.execute(" INSERT INTO `Genre` (Id, Name) VALUES (?, ?)", params)
+
+            except Exception as ex:
+                print(ex)
+                pass #bandaid for repeat Tweets
+        conn.commit()
 
 def add_games_data():
     # Connect to choc database
@@ -368,7 +416,11 @@ def add_platform_data():
 # get_platform_info()
 
 
-# init_db()
+init_db()
+add_games_data()
+add_esrb_ratings()
+add_platform_data()
+add_genre_data()
 
 
 
