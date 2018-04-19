@@ -215,6 +215,27 @@ def get_platform_info():
     fw.write(dumped_json)
     fw.close()
 
+def update_genres():
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+
+    statement = " UPDATE `Games` SET `Genre1` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre1) "
+    cur.execute(statement)
+    statement = " UPDATE `Games` SET `Genre2` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre2) "
+    cur.execute(statement)
+    statement = " UPDATE `Games` SET `Genre3` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre3) "
+    cur.execute(statement)
+    conn.commit()
+    conn.close()
+
+def update_ratings():
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+
+    statement = " UPDATE `Games` SET `Rating` = (SELECT ESRB.Rating From ESRB where ESRB.Id = Games.Rating) "
+    cur.execute(statement)
+    conn.commit()
+    conn.close()
 
 
 def init_db():
@@ -416,11 +437,7 @@ def add_platform_data():
 # get_platform_info()
 
 
-init_db()
-add_games_data()
-add_esrb_ratings()
-add_platform_data()
-add_genre_data()
+# init_db()
 
 
 
