@@ -8,6 +8,8 @@ import requests
 import json
 import secrets
 import math
+import plotly.plotly as py
+import plotly.graph_objs as go
 
 def get_datetime():
     now = time.strftime("%a %b %d %H:%M:%S %Y")
@@ -434,9 +436,122 @@ def add_platform_data():
     conn.commit()
     conn.close()
 
+
+def releaseCounts(releaseYear):
+
+        # Connect to choc database
+        conn = sqlite3.connect('test.db')
+        cur = conn.cursor()
+        list_of_monthly_releases = []
+        for x in range(12):
+
+            statement = "Select Count(Name) From Games Where ReleaseYear = {} and ReleaseMonth = {}".format(releaseYear, str(x + 1))
+            cur.execute(statement)
+            for x in cur:
+                list_of_monthly_releases.append(x[0])
+
+        return list_of_monthly_releases
+
 # get_platform_info()
+def plot_line_data():
+    list_of_monthly_releases = releaseCounts(2017)
 
+    data = [ dict(
+            type = 'scatter',
 
+            mode = 'lines',
+            x = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            y = list_of_monthly_releases,
+            xcalender = "gregorian",
+            ycalender = "gregorian",
+            hoverlabel = {
+                        "namelength": 15,
+                        "font": {
+                                "family" : "Arial",
+                                "size": 13
+                        }
+            },
+            hoveron = 'points',
+            hoverinfo = "x+y+z+text",
+            opacity = 1,
+    )]
+    layout = [ dict(
+            title = "2017 Releases by Month",
+            titlefont = {
+                        "family": "Open Sans",
+                        "size": 17,
+                        "color": "#000000"
+            },
+            calendar = "gregorian",
+            hoverdistance = 20,
+            spikedistance = 20,
+            width = 100,
+            margin = {
+                    "l": 80,
+                    "r": 80,
+                    "t": 100,
+                    "b": 80,
+                    "pad": 0,
+                    "autoexpand": "true"
+
+            },
+            xaxis = {
+                    "type": "category",
+                    "visible": "true",
+                    "autorange": "true",
+                    "rangemode": "normal",
+                    "range": [0,11],
+                    "categoryorder": "trace",
+                    "color": "#444",
+                    "tickmode": "auto",
+                    "nticks": 0,
+                    "showticklabels": "true",
+                    "tickangle": "true",
+                    "gridwidth": 1,
+                    "showgrid": "false",
+                    "anchor": "y",
+                    "side": "bottom",
+                    "domain": [0,1],
+                    "constrain": "range",
+                    "constraintoward": "center",
+                    "tick0": 0,
+                    "dtick": 1
+            },
+            yaxis = {
+                    "type": "linear",
+                    "title": "# of Releases",
+                    "visible": "true",
+                    "autorange": "true",
+                    "rangemode": "normal",
+                    "color": "#444",
+                    "tickmode": "auto",
+                    "nticks": 0,
+                    "showticklabels": "true",
+                    "tickangle": "true",
+                    "gridwidth": 1,
+                    "showgrid": "false",
+                    "anchor": "x",
+                    "side": "left",
+                    "domain": [0,1],
+                    "constrain": "range",
+                    "constraintoward": "center",
+                    "tick0": 0,
+                    "dtick": 20
+            },
+            autosize = "true",
+            hoverlabel = {
+                        "namelength": 15,
+                        "font": {
+                                "family" : "Arial",
+                                "size": 13
+                        }
+            },
+
+    )]
+
+    fig = dict( data=data, layout=layout )
+    py.plot( fig, validate=False, filename='2017 Releases' )
+plot_line_data()
 # init_db()
 
 
