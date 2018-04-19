@@ -271,7 +271,7 @@ def add_games_data():
 
 
     ### Add countries data first
-    for x in ['2016games.json', '2017games.json' ]:
+    for x in ['2013games.json', '2014games.json', '2015games.json' ]:
 
         with open(x) as json_data:
             g = json.load(json_data)
@@ -323,7 +323,7 @@ def add_platform_data():
 
 # get_platform_info()
 
-# get_games_by_releaseYear(2016)
+
 
 
 
@@ -332,7 +332,7 @@ def add_platform_data():
 
 # init_db()
 # add_platform_data()
-# add_games_data()
+add_games_data()
 
 
 
