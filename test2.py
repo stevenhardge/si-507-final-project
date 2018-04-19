@@ -62,9 +62,9 @@ def get_games_by_releaseYear(releaseYear):
             "[y][eq]"    : releaseYear,
 
         },
-        'expand': "game",
+        'expand': ["game", "platform"],
         'order':"date:desc",
-        'fields': ["game.name", "game.genres"],
+        'fields': ["game.name", "game.genres", "game.esrb", "platform.name", "m"],
         'scroll':1,
         'limit':50
     })
@@ -76,6 +76,7 @@ def get_games_by_releaseYear(releaseYear):
         for y in result.body:
             empty_dict = {}
             game = y["game"]
+            platform = y["platform"]
             try:
                 empty_dict["id"] = game["id"]
             except:
@@ -88,6 +89,19 @@ def get_games_by_releaseYear(releaseYear):
                 empty_dict["genres"] = game["genres"]
             except:
                 empty_dict["genres"] =""
+            try:
+                esrb = game["esrb"]
+                empty_dict["rating"] = esrb["rating"]
+            except:
+                empty_dict["rating"] = ""
+            try:
+                empty_dict["platform"] = platform["name"]
+            except:
+                empty_dict["platform"] = ""
+            try:
+                empty_dict["releaseMonth"] = y["m"]
+            except:
+                empty_dict["releaseMonth"] = ""
             empty_dict["releaseYear"] = releaseYear
             list_of_games.append(empty_dict)
         result = igdb.scroll(result)
@@ -200,8 +214,10 @@ def init_db():
     statement += '  `Genre1`    TEXT,'
     statement += '  `Genre2`    TEXT,'
     statement += '  `Genre3`    TEXT,'
+    statement += '  `ReleaseMonth`  TEXT ,'
     statement += '  `ReleaseYear`  TEXT ,'
-    statement += '  `URL`    TEXT );'
+    statement += '  `Platform`  TEXT ,'
+    statement += '  `Rating`    Text );'
 
 
 
@@ -265,9 +281,9 @@ def add_games_data():
                 list_of_genres.append("")
 
         #Add code to insert each of these data of interest to the games table
-        params= (game["id"], game["name"], list_of_genres[0], list_of_genres[1], list_of_genres[2], game["releaseYear"], "" )
+        params= (game["id"], game["name"], list_of_genres[0], list_of_genres[1], list_of_genres[2], game["releaseMonth"], game["releaseYear"], game["platform"], game["rating"] )
         try:
-            cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?, ?, ?)", params)
+            cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", params)
 
         except Exception as ex:
             print(ex)
@@ -301,7 +317,7 @@ def add_platform_data():
     conn.close()
 
 # get_platform_info()
-# get_games_by_releaseYear(2017)
+get_games_by_releaseYear(2017)
 init_db()
 add_platform_data()
 add_games_data()
