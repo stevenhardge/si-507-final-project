@@ -37,7 +37,11 @@ igdb = igdb(API_KEY)
 #DB starts
 DBNAME = 'test.db'
 #CACHE_FNAME
-games_cache = 'games.json'
+games_cache_2013 = '2013games.json'
+games_cache_2014 = '2014games.json'
+games_cache_2015 = '2015games.json'
+games_cache_2016 = '2016games.json'
+games_cache_2017 = '2017games.json'
 platform_cache = 'platform.json'
 CACHE_FNAME = "cache.json"
 CACHE_DICTION = {}
@@ -108,7 +112,8 @@ def get_games_by_releaseYear(releaseYear):
 
     # loaded_json = json.loads(newresult.text)
     dumped_json = json.dumps(list_of_games, indent = 4)
-    fw = open(games_cache,"w")
+    games_cache = str(releaseYear) + "games.json"
+    fw = open(games_cache,"a")
     fw.write(dumped_json)
     fw.close()
     CACHE_DICTION["game_released_in_" + str(releaseYear)] = time.strftime("%a %b %d %H:%M:%S %Y")
@@ -116,8 +121,6 @@ def get_games_by_releaseYear(releaseYear):
     fw = open(CACHE_FNAME,"w")
     fw.write(dumped_json)
     fw.close()
-
-
 
 
 # baseurl = 'https://api-2445582011268.apicast.io/platforms/'
@@ -268,27 +271,29 @@ def add_games_data():
 
 
     ### Add countries data first
-    with open(games_cache) as json_data:
-        g = json.load(json_data)
+    for x in ['2016games.json', '2017games.json' ]:
+
+        with open(x) as json_data:
+            g = json.load(json_data)
 
 
-    for game in g:
-        list_of_genres = []
-        for x in range(3):
+        for game in g:
+            list_of_genres = []
+            for x in range(3):
+                try:
+                    list_of_genres.append(game["genres"][x])
+                except:
+                    list_of_genres.append("")
+
+            #Add code to insert each of these data of interest to the games table
+            params= (game["id"], game["name"], list_of_genres[0], list_of_genres[1], list_of_genres[2], game["releaseMonth"], game["releaseYear"], game["platform"], game["rating"] )
             try:
-                list_of_genres.append(game["genres"][x])
-            except:
-                list_of_genres.append("")
+                cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", params)
 
-        #Add code to insert each of these data of interest to the games table
-        params= (game["id"], game["name"], list_of_genres[0], list_of_genres[1], list_of_genres[2], game["releaseMonth"], game["releaseYear"], game["platform"], game["rating"] )
-        try:
-            cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", params)
-
-        except Exception as ex:
-            print(ex)
-            pass #bandaid for repeat Tweets
-    conn.commit()
+            except Exception as ex:
+                print(ex)
+                pass #bandaid for repeat Tweets
+        conn.commit()
     conn.close()
 
 def add_platform_data():
@@ -317,10 +322,17 @@ def add_platform_data():
     conn.close()
 
 # get_platform_info()
-get_games_by_releaseYear(2017)
-init_db()
-add_platform_data()
-add_games_data()
+
+# get_games_by_releaseYear(2016)
+
+
+
+
+
+
+# init_db()
+# add_platform_data()
+# add_games_data()
 
 
 
