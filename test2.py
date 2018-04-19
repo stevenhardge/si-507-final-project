@@ -45,19 +45,18 @@ games_cache_2017 = '2017games.json'
 platform_cache = 'platform.json'
 CACHE_FNAME = "cache.json"
 CACHE_DICTION = {}
-# GET COMING SOOM PLAYSTATION 4 GAMES
 
 
-# try:
-#     cache_file = open(CACHE_FNAME, 'r')
-#     cache_contents = cache_file.read()
-#     CACHE_DICTION = json.loads(cache_contents)
-#     cache_file.close()
-#
-# # if there was no file, no worries. There will be soon!
-# except:
-#     CACHE_DICTION = {}
-#
+try:
+    cache_file = open(CACHE_FNAME, 'r')
+    cache_contents = cache_file.read()
+    CACHE_DICTION = json.loads(cache_contents)
+    cache_file.close()
+
+# if there was no file, no worries. There will be soon!
+except:
+    CACHE_DICTION = {}
+
 
 def get_games_by_releaseYear(releaseYear):
 
@@ -122,13 +121,16 @@ def get_games_by_releaseYear(releaseYear):
     fw.write(dumped_json)
     fw.close()
 
+def get_genres():
+    result = igdb.genres({
 
-# baseurl = 'https://api-2445582011268.apicast.io/platforms/'
-# params ={ 'ids': 47, 'fields' : 'games', 'limit':50 }
+        'fields': "name",
+        'scroll':1,
+        'limit':50
+    })
+    print(result.body)
 
-# resp = requests.get(baseurl, params = params, headers = headers )
-# cache = json.loads(resp.text)
-# print(cache)
+get_genres()
 def is_platform_cache_old(): #if cache time stamp is older than 6 months, return True value to get data again
     now = time.strftime("%a %b %d %H:%M:%S %Y")
     tdelta = datetime.strptime(now, '%a %b %d %H:%M:%S %Y') - datetime.strptime(CACHE_DICTION["platform_time"], '%a %b %d %H:%M:%S %Y')
@@ -208,6 +210,14 @@ def init_db():
     statement = '''
         DROP TABLE IF EXISTS 'Platforms';
     '''
+
+    statement = '''
+        DROP TABLE IF EXISTS 'ESRB';
+    '''
+
+    statement = '''
+        DROP TABLE IF EXISTS 'Genres';
+    '''
     cur.execute(statement)
     conn.commit()
 
@@ -257,10 +267,44 @@ def init_db():
     except:
         pass
 
+    statement = ' CREATE TABLE `Genre` ( '
+    statement += '   `Id`        INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,'
+    statement += '   `Name`  TEXT);'
+
+    try:
+        cur.execute(statement)
+        conn.commit()
+    except:
+        pass
+
+    statement = ' CREATE TABLE `ESRB` ( '
+    statement += '   `Id`        INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT,'
+    statement += '   `Rating`  TEXT);'
+    try:
+        cur.execute(statement)
+        conn.commit()
+    except:
+        pass
+
 
     #close database connection
     conn.close()
     #this function is not expected to return anything, you can modify this if you want
+def add_esrb_ratings():
+    # Connect to choc database
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+
+    esrb_ratings = ["RP", "EC", "E", "E10+", "T", "M", "AO"]
+    for x in range(7):
+        try:
+            cur.execute(' INSERT INTO `ESRB` (Rating) VALUES ("{}")'.format(esrb_ratings[x]))
+        except Exception as ex:
+            print(ex)
+            pass #bandaid for repeat Tweets
+    conn.commit()
+    conn.close()
+
 
 
 
@@ -271,7 +315,7 @@ def add_games_data():
 
 
     ### Add countries data first
-    for x in ['2013games.json', '2014games.json', '2015games.json' ]:
+    for x in ['2013games.json', '2014games.json', '2015games.json', '2016games.json', '2017games.json' ]:
 
         with open(x) as json_data:
             g = json.load(json_data)
@@ -324,15 +368,8 @@ def add_platform_data():
 # get_platform_info()
 
 
-
-
-
-
-
-
 # init_db()
-# add_platform_data()
-add_games_data()
+
 
 
 
