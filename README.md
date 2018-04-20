@@ -35,7 +35,7 @@ The SQL query functions return a list, or list of lists like `combined_list` whi
 
 ## Warning
 This program uses IGDBs expanded requests and makes a lot  of API Calls. The API is free to use,
-however you can only make 100 of these expanded requests. For that reason, the repo contains
+however you can only make 100 of these expanded requests (free users can make 3000 "regular" requests). For that reason, the repo contains
 the json data for games going back to 2013. However this is only for getting Game data. Building
 the Genre, Platform, and ESRB tables don't use expanded requests.
 
