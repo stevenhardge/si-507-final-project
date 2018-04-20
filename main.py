@@ -954,7 +954,8 @@ def data_checking():
 
 ### Displays help, interactive_prompt function
 def displayHelp():
-
+    print("HELP")
+    print("---------")
     print('`linechart`')
     print('     get a line plot of how many game releases by month through various years ')
     print('     ')
@@ -966,6 +967,7 @@ def displayHelp():
     print('     quit the program')
     print('`help`')
     print('     display this menu')
+    print('---------')
 
 ### For Demo Testing to show relational keys
 def test_foreign_keys():
@@ -980,7 +982,7 @@ def interactive_prompt():
     print("Booting Program...")
 
     data_checking()
-
+    displayHelp()
     while True:
         userInput = input('\nInput a command. at any time in this program. type `help` for assistance, or `exit` to quit\n')
         if userInput == "cleanup":
