@@ -20,6 +20,8 @@ special queries you can indicate like with `2015 -g`.
 
 You can get an API key [here](https://api.igdb.com/signup) which you can then put in your `secrets.py`
 
+Please make sure you download the json files to save time.
+
 ## Code Structure
 
 The program is structured and laid out into groups of functions. The main functions are the Plotly calls starting on line 658,
@@ -36,3 +38,5 @@ This program uses IGDBs expanded requests and makes a lot  of API Calls. The API
 however you can only make 100 of these expanded requests. For that reason, the repo contains
 the json data for games going back to 2013. However this is only for getting Game data. Building
 the Genre, Platform, and ESRB tables don't use expanded requests.
+
+This is why the  `2016games.json` et al are included in the repo
