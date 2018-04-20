@@ -436,8 +436,27 @@ def add_platform_data():
     conn.commit()
     conn.close()
 
+def query_platformCounts(releaseYear):
+    # Connect to choc database
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+    platform_list =[]
+    platform_list_count = []
 
-def releaseCounts(releaseYear):
+
+    statement = "Select Platform, Count(Platform) From Games "
+    statement += " GROUP BY Platform "
+    statement += " Having ReleaseYear = {} AND Count(Platform) > 10".format(releaseYear)
+    cur.execute(statement)
+    for x in cur:
+        platform_list.append(x[0])
+        platform_list_count.append(x[1])
+    combined_list = [platform_list, platform_list_count]
+    return combined_list
+
+
+
+def query_releaseCounts(releaseYear):
 
         # Connect to choc database
         conn = sqlite3.connect('test.db')
@@ -453,8 +472,63 @@ def releaseCounts(releaseYear):
         return list_of_monthly_releases
 
 # get_platform_info()
+def plot_pie_chart():
+    combined_list = query_platformCounts(2017)
+    platform_names = combined_list[0]
+    platform_counts = combined_list[1]
+    data = [ dict(
+            type = 'pie',
+
+            values = platform_counts,
+            labels = platform_names,
+            textinfo = "percent",
+            textposition = "outside",
+
+            hoverlabel = {
+                        "namelength": 15,
+                        "font": {
+                                "family" : "Arial",
+                                "size": 13
+                        }
+            },
+
+
+            opacity = 1,
+    )]
+    layout = [ dict(
+
+            title = '2017 Releases by Platform',
+            titlefont = {
+                        "family": "Open Sans",
+                        "size": 17,
+                        "color": "#000000"
+            },
+            calendar = "gregorian",
+
+            margin = {
+                    "l": 80,
+                    "r": 80,
+                    "t": 100,
+                    "b": 80,
+                    "pad": 0,
+                    "autoexpand": "true"
+
+            },
+            autosize = "true",
+            hoverlabel = {
+                        "namelength": 15,
+                        "font": {
+                                "family" : "Arial",
+                                "size": 13
+                        }
+            },
+
+    )]
+    fig = dict( data=data, layout=layout )
+    py.plot( fig, validate=False, filename='2017 Releases' )
+
 def plot_line_data():
-    list_of_monthly_releases = releaseCounts(2017)
+    list_of_monthly_releases = query_releaseCounts(2017)
 
     data = [ dict(
             type = 'scatter',
@@ -476,7 +550,12 @@ def plot_line_data():
             opacity = 1,
     )]
     layout = [ dict(
-            title = "2017 Releases by Month",
+            font = {
+                    "family": "Verdana",
+                    "size": 12,
+                    "color": "#444",
+            },
+            title = '2017 Releases by Month',
             titlefont = {
                         "family": "Open Sans",
                         "size": 17,
@@ -485,7 +564,8 @@ def plot_line_data():
             calendar = "gregorian",
             hoverdistance = 20,
             spikedistance = 20,
-            width = 100,
+            width = 1000,
+            height = 570,
             margin = {
                     "l": 80,
                     "r": 80,
@@ -550,8 +630,9 @@ def plot_line_data():
     )]
 
     fig = dict( data=data, layout=layout )
-    py.plot( fig, validate=False, filename='2017 Releases' )
-plot_line_data()
+    py.plot( fig, validate=True, filename='2017 Releases' )
+
+plot_pie_chart()
 # init_db()
 
 
