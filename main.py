@@ -6,6 +6,7 @@ import time, os
 import sqlite3
 import requests
 import json
+import sys
 import secrets
 import math
 import plotly.plotly as py
@@ -47,7 +48,7 @@ games_cache_2017 = '2017games.json'
 genre_cache = 'genre.json'
 platform_cache = 'platform.json'
 CACHE_FNAME = "cache.json"
-CACHE_DICTION = {}
+
 
 
 try:
@@ -55,13 +56,16 @@ try:
     cache_contents = cache_file.read()
     CACHE_DICTION = json.loads(cache_contents)
     cache_file.close()
+    
 
 # if there was no file, no worries. There will be soon!
-except:
+except Exception as e:
+
     CACHE_DICTION = {}
 
 
 def get_games_by_releaseYear(releaseYear):
+    print("getting game data...")
 
     result = igdb.release_dates({
         'filters' :{
@@ -125,6 +129,7 @@ def get_games_by_releaseYear(releaseYear):
     fw.close()
 
 def get_genres():
+    print("getting genre data...")
     result = igdb.genres({ #there are only 20 genres
 
         'fields': "name",
@@ -162,16 +167,19 @@ def get_genres():
     fw.close()
 
 
-def is_platform_cache_old(): #if cache time stamp is older than 6 months, return True value to get data again
+
+def is_platform_cache_old(): #if platform cache time stamp is older than 6 months, return True value to get data again
+    print("checking cache...")
     now = time.strftime("%a %b %d %H:%M:%S %Y")
     tdelta = datetime.strptime(now, '%a %b %d %H:%M:%S %Y') - datetime.strptime(CACHE_DICTION["platform_time"], '%a %b %d %H:%M:%S %Y')
-    if tdelta.total_seconds > 1340000:
+    if tdelta.total_seconds > 15552000:
         return True
     else:
         return False
 
 
 def get_platform_info():
+    print("Getting Platform Data...")
 
     result = igdb.platforms({
         'fields':["name", "id", "summary", "alternative_name", "generation"],
@@ -218,6 +226,7 @@ def get_platform_info():
     fw.close()
 
 def update_genres():
+
     conn = sqlite3.connect('test.db')
     cur = conn.cursor()
 
@@ -258,6 +267,7 @@ def init_db():
         DROP TABLE IF EXISTS 'Games';
     '''
     cur.execute(statement)
+    conn.commit()
 
     statement = '''
         DROP TABLE IF EXISTS 'Platforms';
@@ -281,7 +291,7 @@ def init_db():
     statement += '  `Genre1`    TEXT,'
     statement += '  `Genre2`    TEXT,'
     statement += '  `Genre3`    TEXT,'
-    statement += '  `ReleaseMonth`  TEXT ,'
+    statement += '  `ReleaseMonth`  Integer ,'
     statement += '  `ReleaseYear`  TEXT ,'
     statement += '  `Platform`  TEXT ,'
     statement += '  `Rating`    Text );'
@@ -375,9 +385,10 @@ def add_genre_data():
                 cur.execute(" INSERT INTO `Genre` (Id, Name) VALUES (?, ?)", params)
 
             except Exception as ex:
-                print(ex)
+
                 pass #bandaid for repeat Tweets
         conn.commit()
+    conn.close()
 
 def add_games_data():
     # Connect to choc database
@@ -406,7 +417,7 @@ def add_games_data():
                 cur.execute(" INSERT INTO `Games` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", params)
 
             except Exception as ex:
-                print(ex)
+
                 pass #bandaid for repeat Tweets
         conn.commit()
     conn.close()
@@ -431,51 +442,198 @@ def add_platform_data():
             cur.execute(" INSERT INTO `Platforms` VALUES (?, ?, ?, ?, ?)", params)
 
         except:
-            print("168")
+            pass
              #bandaid for repeat Tweets
     conn.commit()
     conn.close()
+def query_ratingCounts(releaseYear = None):
+    # Connect to choc database
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+    rating_list =[]
+    rating_list_count = []
 
-def query_platformCounts(releaseYear):
+    if releaseYear is None:
+        statement = "Select Rating, Count(*) From Games "
+        statement += " GROUP BY Rating "
+        statement += " Having Count(*) > 30 AND Rating NOT Null"
+        cur.execute(statement)
+        for x in cur:
+            rating_list.append(x[0])
+            rating_list_count.append(x[1])
+    else:
+        statement = "Select Rating, Count(*) From Games "
+        statement += " GROUP BY Rating, ReleaseYear "
+        statement += " Having ReleaseYear = {} AND Count(*) > 30  AND Rating Not Null".format(releaseYear)
+        cur.execute(statement)
+        for x in cur:
+            rating_list.append(x[0])
+            rating_list_count.append(x[1])
+    combined_list = [rating_list, rating_list_count]
+
+    return combined_list
+def query_platformCounts(releaseYear = None):
     # Connect to choc database
     conn = sqlite3.connect('test.db')
     cur = conn.cursor()
     platform_list =[]
     platform_list_count = []
 
-
-    statement = "Select Platform, Count(Platform) From Games "
-    statement += " GROUP BY Platform "
-    statement += " Having ReleaseYear = {} AND Count(Platform) > 10".format(releaseYear)
-    cur.execute(statement)
-    for x in cur:
-        platform_list.append(x[0])
-        platform_list_count.append(x[1])
+    if releaseYear is None:
+        statement = "Select Platform, Count(Platform) From Games "
+        statement += " GROUP BY Platform "
+        statement += " Having Count(Platform) > 30 Order by Count(Platform) DESC"
+        cur.execute(statement)
+        for x in cur:
+            platform_list.append(x[0])
+            platform_list_count.append(x[1])
+    else:
+        statement = "Select Platform, Count(Platform) From Games "
+        statement += " GROUP BY Platform, ReleaseYear "
+        statement += " Having ReleaseYear = {} AND Count(Platform) > 30 Order by Count(Platform) DESC".format(releaseYear)
+        cur.execute(statement)
+        for x in cur:
+            platform_list.append(x[0])
+            platform_list_count.append(x[1])
     combined_list = [platform_list, platform_list_count]
+    return combined_list
+def query_genreCounts(releaseYear = None):
+    # Connect to choc database
+    conn = sqlite3.connect('test.db')
+    cur = conn.cursor()
+    genre_dictionary = {}
+
+    if releaseYear is None:
+        statement = "Select Count(Games.Genre1), Genre.Name "
+        statement += " From Genre Join Games on Genre.Name = Games.Genre1 "
+        statement += " Group By Genre.Name Order By Genre.Name Desc"
+        cur.execute(statement)
+        for x in cur:
+            genre = x[0]
+            count = x[1]
+            genre_dictionary[genre] = count
+
+        statement = "Select Count(Games.Genre2), Genre.Name "
+        statement += " From Genre Join Games on Genre.Name = Games.Genre2 "
+        statement += " Group By Genre.Name Order By Genre.Name Desc"
+        cur.execute(statement)
+        for x in cur:
+            if x[1] not in genre_dictionary:
+                genre_dictionary[x[1]] = x[0]
+                continue
+            genre = x[1]
+            count = x[0] + genre_dictionary[genre]
+            genre_dictionary[genre] = count
+        statement = "Select Count(Games.Genre3), Genre.Name "
+        statement += " From Genre Join Games on Genre.Name = Games.Genre3 "
+        statement += " Group By Genre.Name Order By Genre.Name Desc"
+        cur.execute(statement)
+        for x in cur:
+            if x[1] not in genre_dictionary:
+                genre_dictionary[x[1]] = x[0]
+                continue
+            genre = x[1]
+            count = x[0] + genre_dictionary[genre]
+            genre_dictionary[genre] = count
+    else:
+
+        statement = "Select Count(Games.Genre1), Genre.Name "
+        statement += " From Genre Join Games on Genre.Name = Games.Genre1 "
+        statement += " Group By Genre.Name, Games.ReleaseYear Having Games.ReleaseYear = {} Order By Genre.Name Desc".format(releaseYear)
+        cur.execute(statement)
+        for x in cur:
+            genre = x[0]
+            count = x[1]
+            genre_dictionary[genre] = count
+
+        statement = "Select Count(Games.Genre2), Genre.Name "
+        statement += " From Genre Join Games on Genre.Name = Games.Genre2 "
+        statement += " Group By Genre.Name, Games.ReleaseYear Having Games.ReleaseYear = {} Order By Genre.Name Desc".format(releaseYear)
+        cur.execute(statement)
+        for x in cur:
+            if x[1] not in genre_dictionary:
+                genre_dictionary[x[1]] = x[0]
+                continue
+            genre = x[1]
+            count = x[0] + genre_dictionary[genre]
+            genre_dictionary[genre] = count
+        statement = "Select Count(Games.Genre3), Genre.Name "
+        statement += " From Genre Join Games on Genre.Name = Games.Genre3 "
+        statement += " Group By Genre.Name, Games.ReleaseYear Having Games.ReleaseYear = {} Order By Genre.Name Desc".format(releaseYear)
+        cur.execute(statement)
+        for x in cur:
+            if x[1] not in genre_dictionary:
+                genre_dictionary[x[1]] = x[0]
+                continue
+            genre = x[1]
+            count = x[0] + genre_dictionary[genre]
+            genre_dictionary[genre] = count
+
+
+    list_names =[]
+    list_vals = []
+    for k,v in genre_dictionary.items():
+        list_names.append(k)
+        list_vals.append(v)
+    combined_list = [list_names, list_vals]
+
+
     return combined_list
 
 
 
-def query_releaseCounts(releaseYear):
-
-        # Connect to choc database
+def query_releaseCounts(releaseYear = None, platform = False):
         conn = sqlite3.connect('test.db')
         cur = conn.cursor()
         list_of_monthly_releases = []
-        for x in range(12):
 
-            statement = "Select Count(Name) From Games Where ReleaseYear = {} and ReleaseMonth = {}".format(releaseYear, str(x + 1))
-            cur.execute(statement)
-            for x in cur:
-                list_of_monthly_releases.append(x[0])
+        if not platform: #if we're not doing a query by platform
+            if releaseYear is None:
+                for x in range(12):
+
+                    statement = "Select Count(Name) From Games Where ReleaseMonth = {}".format(str(x + 1))
+                    cur.execute(statement)
+                    for x in cur:
+                        list_of_monthly_releases.append(x[0])
+            else:
+                for x in range(12):
+
+                    statement = "Select Count(Name) From Games Where ReleaseYear = {} and ReleaseMonth = {}".format(releaseYear, str(x + 1))
+                    cur.execute(statement)
+                    for x in cur:
+                        list_of_monthly_releases.append(x[0])
+
+
+        else: # if we're doing a query by platform
+            if releaseYear is None:
+                for x in range(12):
+
+                    statement = "SELECT Platform, ReleaseMonth, Count(*) From Games "
+                    statement += " Group By Platform, ReleaseYear, ReleaseMonth "
+                    statement += " Having ReleaseYear = {} and Count(*) >3 and ReleaseMonth = {}".format(releaseYear, str(x + 1))
+                    cur.execute(statement)
+                    for x in cur:
+                        list_of_monthly_releases.append(x[0])
+            else:
+
+                for x in range(12):
+
+                    statement = "SELECT Platform, ReleaseMonth, Count(*) From Games "
+                    statement += " Group By Platform, ReleaseYear, ReleaseMonth "
+                    statement += " Having ReleaseYear = {} and Count(*) >3 and ReleaseMonth = {}".format(releaseYear, str(x + 1))
+                    cur.execute(statement)
+                    for x in cur:
+                        list_of_monthly_releases.append(x[0])
+
+
 
         return list_of_monthly_releases
 
 # get_platform_info()
-def plot_pie_chart():
-    combined_list = query_platformCounts(2017)
-    platform_names = combined_list[0]
-    platform_counts = combined_list[1]
+def plot_pie_chart(pie_data):
+
+    platform_names = pie_data[0]
+    platform_counts = pie_data[1]
     data = [ dict(
             type = 'pie',
 
@@ -527,8 +685,7 @@ def plot_pie_chart():
     fig = dict( data=data, layout=layout )
     py.plot( fig, validate=False, filename='2017 Releases' )
 
-def plot_line_data():
-    list_of_monthly_releases = query_releaseCounts(2017)
+def plot_line_data(list_of_monthly_releases):
 
     data = [ dict(
             type = 'scatter',
@@ -630,12 +787,231 @@ def plot_line_data():
     )]
 
     fig = dict( data=data, layout=layout )
-    py.plot( fig, validate=True, filename='2017 Releases' )
+    py.plot( fig, validate=False, filename='2017 Releases' )
 
-plot_pie_chart()
-# init_db()
+class LineChart():
+    def __init__(self, releaseYear = None):
+        self.releaseYear = releaseYear
+        if self.releaseYear == "allyears":
+            list_of_monthly_releases = query_releaseCounts()
 
+            plot_line_data(list_of_monthly_releases)
+        else:
+            list_of_monthly_releases = query_releaseCounts(self.releaseYear)
+
+            plot_line_data(list_of_monthly_releases)
+
+
+class PlatformChart(LineChart):
+    def __init__(self, platform = True, releaseYear = None):
+        self.platform = platform
+
+        self.releaseYear = releaseYear
+        if self.releaseYear == "allyears":
+            list_of_monthly_releases = query_releaseCounts()
+            plot_line_data(list_of_monthly_releases)
+        else:
+            list_of_monthly_releases = query_releaseCounts(self.platform)
+            plot_line_data(list_of_monthly_releases)
+
+class PieChart():
+        def __init__(self, releaseYear = None):
+            self.releaseYear = releaseYear
+            if self.releaseYear == "allyears":
+                list_of_releases = query_platformCounts()
+
+                plot_pie_chart(list_of_releases)
+            else:
+                list_of_releases = query_platformCounts(self.releaseYear)
+                plot_pie_chart(list_of_releases)
+
+class GenreChart(PieChart):
+    def __init__(self, releaseYear = None):
+
+        self.releaseYear = releaseYear
+        if self.releaseYear == "allyears":
+            list_of_genre_releases = query_genreCounts()
+            plot_pie_chart(list_of_genre_releases)
+        else:
+            list_of_genre_releases = query_genreCounts(self.releaseYear)
+            plot_pie_chart(list_of_genre_releases)
+
+class RatingChart(PieChart):
+    def __init__(self, releaseYear = None):
+
+        self.releaseYear = releaseYear
+        if self.releaseYear == "allyears":
+            list_of_rating_releases = query_ratingCounts()
+            plot_pie_chart(list_of_rating_releases)
+        else:
+            list_of_rating_releases = query_ratingCounts(self.releaseYear)
+            plot_pie_chart(list_of_rating_releases)
+
+def clean_db():
+
+    init_db()
+    add_games_data()
+    add_genre_data()
+    add_platform_data()
+    add_esrb_ratings()
+    update_genres()
+    update_ratings()
+
+
+
+def data_checking():
+    try:
+        if "platform_time" in CACHE_DICTION:  #does the cache entry for platform exist?
+            if is_platform_cache_old(): # is the cache entry old?
+                # get_platform_info()
+                pass
+            else:
+                print("but here")
+                pass
+        else:
+            print("WOW")
+            # get_platform_info()
+    except Exception as e:
+        print(e)
+        # get_platform_info()
+
+    try:
+        if os.path.isfile("test.db"):
+            try:
+                conn = sqlite3.connect("test.db")
+                cur = conn.cursor()
+                statement = 'Select Name From Games Where Genre1 = "Shooter"'
+
+                cur.execute(statement)
+                statement = 'Select Rating From ESRB Where Rating = "M"'
+
+                cur.execute(statement)
+                statement = 'Select Name From Genre Where Name = "Shooter"'
+
+                cur.execute(statement)
+                statement = 'Select Name From Platforms Where Name = "Nintendo Switch"'
+
+                cur.execute(statement)
+                print("Database seems fine, continuing with boot")
+
+            except Exception as e:
+                # print(e)
+                print("Something wrong with your DB, spinning up new one to be safe")
+                clean_db()
+
+        else:
+            print("Revving up new DB")
+            clean_db()
+
+    except Exception as e:
+        print(e)
 
 
 
  # Close the open file
+def displayHelp():
+
+    print('`linechart`')
+    print('     get a line plot of how many game releases by month through various years ')
+    print('     ')
+
+    print('`piechart`')
+    print('     get a pie chart of game releases by different categories')
+
+    print('`exit`')
+    print('     quit the program')
+    print('`help`')
+    print('     display this menu')
+
+
+
+
+
+def interactive_prompt():
+    print("Booting Program...")
+
+    data_checking()
+
+    while True:
+        userInput = input('\nInput a command. at any time in this program. type `help` for assistance, or `exit` to quit\n')
+        if userInput == "cleanup":
+            print("Revving up clean DB")
+            clean_db()
+        if userInput == "exit":
+            sys.exit(0)
+        if userInput == "help":
+
+            displayHelp()
+        if userInput == "linechart":
+            print("Enter the year you want to display")
+            print("You can pick from 2013-2017")
+            while True:
+                yearInput = input("\nEnter a Year, or type back to go pick another chart\nAdd on `-p`to get a chart by platform")
+                if yearInput == "exit":
+                    sys.exit(0)
+                if yearInput == "help":
+
+                    displayHelp()
+                if yearInput == "back":
+                    break
+                if len(yearInput.split()) == 1:
+                    if yearInput not in ["2013", "2014", "2015", "2016", "2017", "allyears"]:
+                        print("Are you sure that is a year?")
+                        pass
+                    else:
+                        print("getting that chart for you")
+                        LineChart(releaseYear = yearInput)
+                        print("Type another year or type `back` to try another graph")
+                elif len(yearInput.split()) == 2:
+                    if "-p" not in yearInput.split()[1]:
+                        print("Are you sure you entered things correctly?")
+                        pass
+                    else:
+                        print("getting that chart for you, with a dash of platform")
+                        #PlatformChart(releaseYear = yearInput)
+                        print("Type another year or type `back` to try another graph")
+
+        if userInput == "piechart":
+            print("Enter the year you want to display a piechart. The default category is by Platform")
+            print("You can pick from 2013-2017, or type `allyears` to check the entire DB")
+            acceptable_hooks = ["-g", "-r"]
+            while True:
+                yearInput = input("\nEnter a Year, or type back to go pick another chart\nadd on ` -r` to get a chart of ratings or ` -g` for genre")
+                if yearInput == "exit":
+                    sys.exit(0)
+                if yearInput == "help":
+                    print("help")
+                    displayHelp()
+                if yearInput == "back":
+                    break
+                if len(yearInput.split()) == 1:
+                    if yearInput.split()[0] not in ["2013", "2014", "2015", "2016", "2017", "allyears"]:
+                        print("Are you sure that is a year?")
+                        pass
+                    else:
+                        print("getting that chart for you")
+                        PieChart(releaseYear = yearInput)
+                        print("Type another year or type `back` to try another graph")
+                elif len(yearInput.split()) == 2:
+                    if yearInput.split()[1] not in acceptable_hooks:
+                        print("Are you sure you entered things correctly?")
+                        pass
+                    else:
+                        if "-g" in yearInput.split()[1]:
+                            print("getting that chart for you, with a dash of genre")
+                            GenreChart(releaseYear = yearInput.split()[0])
+                            print("Type another year or type `back` to try another graph")
+                        elif "-r" in yearInput.split()[1]:
+                            print("getting that chart for you, with a dash of rating")
+                            RatingChart(releaseYear = yearInput.split()[0])
+                            print("Type another year or type `back` to try another graph")
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    interactive_prompt()

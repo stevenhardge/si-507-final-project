@@ -1,0 +1,1052 @@
+[
+    {
+        "id": 32,
+        "name": "Sega Saturn",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 84,
+        "name": "SG-1000",
+        "alternative_name": "Sega Game 1000",
+        "generation": 3,
+        "summary": ""
+    },
+    {
+        "id": 50,
+        "name": "3DO Interactive Multiplayer",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 30,
+        "name": "Sega 32X",
+        "alternative_name": "",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 11,
+        "name": "Xbox",
+        "alternative_name": "",
+        "generation": 6,
+        "summary": ""
+    },
+    {
+        "id": 78,
+        "name": "Sega CD",
+        "alternative_name": "Mega CD",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 113,
+        "name": "OnLive Game System",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 79,
+        "name": "Neo Geo MVS",
+        "alternative_name": "MVS",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 110,
+        "name": "PLATO",
+        "alternative_name": "Programmed Logic for Automatic Teaching Operations",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 125,
+        "name": "PC-8801",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 25,
+        "name": "Amstrad CPC",
+        "alternative_name": "Colour Personal Computer",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 99,
+        "name": "Family Computer (FAMICOM)",
+        "alternative_name": "Famicom",
+        "generation": 3,
+        "summary": ""
+    },
+    {
+        "id": 153,
+        "name": "Dragon 32/64",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 47,
+        "name": "Virtual Console (Nintendo)",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 60,
+        "name": "Atari 7800",
+        "alternative_name": "Atari 7800 ProSystem",
+        "generation": 3,
+        "summary": ""
+    },
+    {
+        "id": 55,
+        "name": "Mobile",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 62,
+        "name": "Atari Jaguar",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 57,
+        "name": "WonderSwan",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 56,
+        "name": "WiiWare",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 42,
+        "name": "N-Gage",
+        "alternative_name": "",
+        "generation": 6,
+        "summary": ""
+    },
+    {
+        "id": 22,
+        "name": "Game Boy Color",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 77,
+        "name": "Sharp X1",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 35,
+        "name": "Sega Game Gear",
+        "alternative_name": "",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 4,
+        "name": "Nintendo 64",
+        "alternative_name": "N64",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 129,
+        "name": "Texas Instruments TI-99",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 97,
+        "name": "PDP-8",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 100,
+        "name": "Analogue electronics",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 103,
+        "name": "PDP-7",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 102,
+        "name": "EDSAC",
+        "alternative_name": "Electronic Delay Storage Automatic Calculator",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 121,
+        "name": "Sharp X68000",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 142,
+        "name": "PC-50X Family",
+        "alternative_name": "",
+        "generation": 1,
+        "summary": ""
+    },
+    {
+        "id": 157,
+        "name": "NEC PC-6000 Series",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 161,
+        "name": "Windows Mixed Reality",
+        "alternative_name": "WMR",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 143,
+        "name": "AY-3-8760",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 140,
+        "name": "AY-3-8500",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 149,
+        "name": "PC-98",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 137,
+        "name": "New Nintendo 3DS",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 6,
+        "name": "PC (Microsoft Windows)",
+        "alternative_name": "mswin",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 37,
+        "name": "Nintendo 3DS",
+        "alternative_name": "3DS",
+        "generation": 8,
+        "summary": ""
+    },
+    {
+        "id": 48,
+        "name": "PlayStation 4",
+        "alternative_name": "PS4",
+        "generation": 8,
+        "summary": "The PlayStation 4 system opens the door to an incredible journey through immersive new gaming worlds and a deeply connected gaming community. PS4 puts gamers first with an astounding launch line-up and over 180 games in development. Play amazing top-tier blockbusters and innovative indie hits on PS4. Developer inspired, gamer focused."
+    },
+    {
+        "id": 68,
+        "name": "ColecoVision",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 61,
+        "name": "Atari Lynx",
+        "alternative_name": "",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 74,
+        "name": "Windows Phone",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 36,
+        "name": "Xbox Live Arcade",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 63,
+        "name": "Atari ST/STE",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 80,
+        "name": "Neo Geo AES",
+        "alternative_name": "AES",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 123,
+        "name": "WonderSwan Color",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 134,
+        "name": "Acorn Electron",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 163,
+        "name": "SteamVR",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 156,
+        "name": "Thomson MO5",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 160,
+        "name": "Nintendo eShop",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 14,
+        "name": "Mac",
+        "alternative_name": "Mac OS",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 20,
+        "name": "Nintendo DS",
+        "alternative_name": "DS",
+        "generation": 7,
+        "summary": ""
+    },
+    {
+        "id": 34,
+        "name": "Android",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 21,
+        "name": "Nintendo GameCube",
+        "alternative_name": "",
+        "generation": 6,
+        "summary": ""
+    },
+    {
+        "id": 9,
+        "name": "PlayStation 3",
+        "alternative_name": "",
+        "generation": 7,
+        "summary": ""
+    },
+    {
+        "id": 13,
+        "name": "PC DOS",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 58,
+        "name": "Super Famicom",
+        "alternative_name": "SFC",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 73,
+        "name": "BlackBerry OS",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 27,
+        "name": "MSX",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 65,
+        "name": "Atari 8-bit",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 118,
+        "name": "FM Towns",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 126,
+        "name": "TRS-80",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 92,
+        "name": "SteamOS",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 98,
+        "name": "DEC GT40",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 111,
+        "name": "Imlac PDS-1",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 72,
+        "name": "Ouya",
+        "alternative_name": "",
+        "generation": 8,
+        "summary": "The Ouya (/\u02c8u\u02d0j\u0259/ oo-y\u0259), stylized OUYA, is a microconsole running its own version of the Android operating system, developed by Ouya Inc. Julie Uhrman founded the project in 2012. She brought in designer Yves B\u00e9har to collaborate on the design of the project, and Muffi Ghadiali as product manager to put together the engineering team. Development was funded via Kickstarter, raising $8.5 million and becoming the website's second-highest-earning project in its history.\n\nUnits started to ship to Kickstarter backers on March 28, 2013. The console was released to the general public on June 25, 2013, and features an exclusive Ouya store for applications and games designed specifically for the Ouya platform, of which the majority are casual games targeted at or used by a mass audience of casual gamers. Out of the box, Ouya supports media apps such as TwitchTV and XBMC media player. It runs a modified version of Android 4.1 Jelly Bean, and is open to rooting without voiding the warranty (developer models ordered during the Kickstarter campaign for $699 or $1,337 come pre-rooted). The console's hardware design allows it to be easily opened up, requiring only a standard screwdriver for easy modding and possible hardware addons.\n\nAll systems can be used as development kits, allowing any Ouya owner to also be a developer, without the need for licensing fees. All games are required to have some kind of free-to-play aspect, whether that be completely free, has a free trial, or has purchasable upgrades, levels, or other in-game items. The Ouya is classified as part of the eighth generation of video game consoles and as such is a rival competing against the PlayStation 4, Xbox One, and Wii U."
+    },
+    {
+        "id": 86,
+        "name": "TurboGrafx-16/PC Engine",
+        "alternative_name": "",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 87,
+        "name": "Virtual Boy",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 138,
+        "name": "VC 4000",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 147,
+        "name": "AY-3-8606",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 146,
+        "name": "AY-3-8605",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 164,
+        "name": "Daydream",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 165,
+        "name": "PlayStation VR",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 41,
+        "name": "Wii U",
+        "alternative_name": "",
+        "generation": 8,
+        "summary": ""
+    },
+    {
+        "id": 82,
+        "name": "Web browser",
+        "alternative_name": "internet",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 122,
+        "name": "Nuon",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 88,
+        "name": "Odyssey",
+        "alternative_name": "Magnavox Odyssey; Odysee; Odisea; Odissea",
+        "generation": 1,
+        "summary": ""
+    },
+    {
+        "id": 29,
+        "name": "Sega Mega Drive/Genesis",
+        "alternative_name": "Sega Genesis",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 114,
+        "name": "Amiga CD32",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 94,
+        "name": "Commodore Plus/4",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 115,
+        "name": "Apple IIGS",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 116,
+        "name": "Acorn Archimedes",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 15,
+        "name": "Commodore C64/128",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 66,
+        "name": "Atari 5200",
+        "alternative_name": "Atari 5200 SuperSystem",
+        "generation": 2,
+        "summary": "the mother text"
+    },
+    {
+        "id": 51,
+        "name": "Family Computer Disk System",
+        "alternative_name": "",
+        "generation": 3,
+        "summary": ""
+    },
+    {
+        "id": 44,
+        "name": "Tapwave Zodiac",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 53,
+        "name": "MSX2",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 119,
+        "name": "Neo Geo Pocket",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 106,
+        "name": "SDS Sigma 7",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 112,
+        "name": "Microcomputer",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 90,
+        "name": "Commodore PET",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 85,
+        "name": "Donner Model 30",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 127,
+        "name": "Fairchild Channel F",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 124,
+        "name": "SwanCrystal",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 139,
+        "name": "1292 Advanced Programmable Video System",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 144,
+        "name": "AY-3-8710",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 158,
+        "name": "Commodore CDTV",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 70,
+        "name": "Vectrex",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 26,
+        "name": "ZX Spectrum",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 24,
+        "name": "Game Boy Advance",
+        "alternative_name": "GBA",
+        "generation": 6,
+        "summary": ""
+    },
+    {
+        "id": 33,
+        "name": "Game Boy",
+        "alternative_name": "",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 91,
+        "name": "Bally Astrocade",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 71,
+        "name": "Commodore VIC-20",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 105,
+        "name": "HP 3000",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 131,
+        "name": "Nintendo PlayStation",
+        "alternative_name": "Nintendo Super Disc",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 132,
+        "name": "Amazon Fire TV",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 133,
+        "name": "Philips Videopac G7000",
+        "alternative_name": "Magnavox Odyssey\u00b2",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 130,
+        "name": "Nintendo Switch",
+        "alternative_name": "NX",
+        "generation": 8,
+        "summary": ""
+    },
+    {
+        "id": 145,
+        "name": "AY-3-8603",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 19,
+        "name": "Super Nintendo Entertainment System (SNES)",
+        "alternative_name": "SNES, Super Nintendo",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 39,
+        "name": "iOS",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 52,
+        "name": "Arcade",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 23,
+        "name": "Dreamcast",
+        "alternative_name": "",
+        "generation": 6,
+        "summary": ""
+    },
+    {
+        "id": 120,
+        "name": "Neo Geo Pocket Color",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 128,
+        "name": "PC Engine SuperGrafx",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 89,
+        "name": "Microvision",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 95,
+        "name": "PDP-1",
+        "alternative_name": "Programmed Data Processor-1",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 101,
+        "name": "Ferranti Nimrod Computer",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 109,
+        "name": "CDC Cyber 70",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 135,
+        "name": "Hyper Neo Geo 64",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 141,
+        "name": "AY-3-8610",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 136,
+        "name": "Neo Geo CD",
+        "alternative_name": "",
+        "generation": 4,
+        "summary": ""
+    },
+    {
+        "id": 154,
+        "name": "Amstrad PCW",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 96,
+        "name": "PDP-10",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 108,
+        "name": "PDP-11",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 117,
+        "name": "Philips CD-i",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 69,
+        "name": "BBC Microcomputer System",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 75,
+        "name": "Apple II",
+        "alternative_name": "apple ][",
+        "generation": "",
+        "summary": "The Apple II is an 8-bit home computer, one of the first highly successful mass-produced microcomputer products, designed primarily by Steve Wozniak, manufactured by Apple Computer (now Apple Inc.) and introduced in 1977. It is the first model in a series of computers which were produced until Apple IIe production ceased in November 1993."
+    },
+    {
+        "id": 155,
+        "name": "Tatung Einstein",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 148,
+        "name": "AY-3-8607",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 162,
+        "name": "Oculus VR",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 16,
+        "name": "Amiga",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 3,
+        "name": "Linux",
+        "alternative_name": "GNU/Linux",
+        "generation": "",
+        "summary": "Linux is a free and open-source (FOSS/FLOSS) Operating System. In a more precise and complex definition, Linux is an open-source OS kernel on which a large variety of Operating Systems (known as Linux distributions) are built."
+    },
+    {
+        "id": 8,
+        "name": "PlayStation 2",
+        "alternative_name": "PS2",
+        "generation": 6,
+        "summary": ""
+    },
+    {
+        "id": 38,
+        "name": "PlayStation Portable",
+        "alternative_name": "",
+        "generation": 7,
+        "summary": ""
+    },
+    {
+        "id": 45,
+        "name": "PlayStation Network",
+        "alternative_name": "PSN",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 12,
+        "name": "Xbox 360",
+        "alternative_name": "xbx360",
+        "generation": 7,
+        "summary": "Xbox 360 brings you a total games and entertainment experience. The largest library of games, including titles that get you right into the thick of it with Kinect. Plus, your whole family can watch HD movies, TV shows, live events, music, sports and more\u2014across all your devices. Xbox 360 is the center of your games and entertainment universe."
+    },
+    {
+        "id": 46,
+        "name": "PlayStation Vita",
+        "alternative_name": "",
+        "generation": 8,
+        "summary": ""
+    },
+    {
+        "id": 49,
+        "name": "Xbox One",
+        "alternative_name": "Xbone",
+        "generation": 8,
+        "summary": "Welcome to a new generation of games and entertainment. Where games push the boundaries of realism. And television obeys your every command. Where listening to music while playing a game is a snap. And you can jump from TV to movies to music to a game in an instant. Where your experience is custom tailored to you. And the entertainment you love is all in one place. Welcome to the all-in-one, Xbox One"
+    },
+    {
+        "id": 7,
+        "name": "PlayStation",
+        "alternative_name": "",
+        "generation": 5,
+        "summary": ""
+    },
+    {
+        "id": 5,
+        "name": "Wii",
+        "alternative_name": "",
+        "generation": 7,
+        "summary": ""
+    },
+    {
+        "id": 18,
+        "name": "Nintendo Entertainment System (NES)",
+        "alternative_name": "NES",
+        "generation": 3,
+        "summary": ""
+    },
+    {
+        "id": 59,
+        "name": "Atari 2600",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 67,
+        "name": "Intellivision",
+        "alternative_name": "",
+        "generation": 2,
+        "summary": ""
+    },
+    {
+        "id": 64,
+        "name": "Sega Master System",
+        "alternative_name": "SMS",
+        "generation": 3,
+        "summary": ""
+    },
+    {
+        "id": 107,
+        "name": "Call-A-Computer time-shared mainframe computer system",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 104,
+        "name": "HP 2100",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 93,
+        "name": "Commodore 16",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    },
+    {
+        "id": 150,
+        "name": "Turbografx-16/PC Engine CD",
+        "alternative_name": "",
+        "generation": "",
+        "summary": ""
+    }
+]
