@@ -38,7 +38,7 @@ API_KEY = secrets.API_KEY
 igdb = igdb(API_KEY)
 
 #DB starts
-DBNAME = 'test.db'
+DBNAME = 'game.db'
 #CACHE_FNAME
 games_cache_2013 = '2013games.json'
 games_cache_2014 = '2014games.json'
@@ -50,13 +50,13 @@ platform_cache = 'platform.json'
 CACHE_FNAME = "cache.json"
 
 
-
+### Set up CACHE
 try:
     cache_file = open(CACHE_FNAME, 'r')
     cache_contents = cache_file.read()
     CACHE_DICTION = json.loads(cache_contents)
     cache_file.close()
-    
+
 
 # if there was no file, no worries. There will be soon!
 except Exception as e:
@@ -64,6 +64,13 @@ except Exception as e:
     CACHE_DICTION = {}
 
 
+######### API Functions #########
+
+### Calls API For games by release year
+
+
+#### note: This API free to use, with 3k regular requests a month
+#### This Function uses "expander" calls which free users only get 100 per month, use sparingly!
 def get_games_by_releaseYear(releaseYear):
     print("getting game data...")
 
@@ -128,6 +135,8 @@ def get_games_by_releaseYear(releaseYear):
     fw.write(dumped_json)
     fw.close()
 
+
+#### Genre API function
 def get_genres():
     print("getting genre data...")
     result = igdb.genres({ #there are only 20 genres
@@ -166,18 +175,7 @@ def get_genres():
     fw.write(dumped_json)
     fw.close()
 
-
-
-def is_platform_cache_old(): #if platform cache time stamp is older than 6 months, return True value to get data again
-    print("checking cache...")
-    now = time.strftime("%a %b %d %H:%M:%S %Y")
-    tdelta = datetime.strptime(now, '%a %b %d %H:%M:%S %Y') - datetime.strptime(CACHE_DICTION["platform_time"], '%a %b %d %H:%M:%S %Y')
-    if tdelta.total_seconds > 15552000:
-        return True
-    else:
-        return False
-
-
+#### Platform API Function
 def get_platform_info():
     print("Getting Platform Data...")
 
@@ -225,42 +223,31 @@ def get_platform_info():
     fw.write(dumped_json)
     fw.close()
 
-def update_genres():
-
-    conn = sqlite3.connect('test.db')
-    cur = conn.cursor()
-
-    statement = " UPDATE `Games` SET `Genre1` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre1) "
-    cur.execute(statement)
-    statement = " UPDATE `Games` SET `Genre2` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre2) "
-    cur.execute(statement)
-    statement = " UPDATE `Games` SET `Genre3` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre3) "
-    cur.execute(statement)
-    conn.commit()
-    conn.close()
-
-def update_ratings():
-    conn = sqlite3.connect('test.db')
-    cur = conn.cursor()
-
-    statement = " UPDATE `Games` SET `Rating` = (SELECT ESRB.Rating From ESRB where ESRB.Id = Games.Rating) "
-    cur.execute(statement)
-    conn.commit()
-    conn.close()
+#if platform cache time stamp is older than 6 months, return True value to get data again
+def is_platform_cache_old():
+    print("checking cache...")
+    now = time.strftime("%a %b %d %H:%M:%S %Y")
+    tdelta = datetime.strptime(now, '%a %b %d %H:%M:%S %Y') - datetime.strptime(CACHE_DICTION["platform_time"], '%a %b %d %H:%M:%S %Y')
+    if tdelta.total_seconds > 15552000:
+        return True
+    else:
+        return False
 
 
+
+###### Database creation functions ######
+
+### Create Database with necessary Tables
 def init_db():
     #code to create a new database goes here
     #handle exception if connection fails by printing the error
 
     try:
-        conn = sqlite3.connect("test.db")
+        conn = sqlite3.connect("game.db")
         cur = conn.cursor()
     except Exception as e:
         print(e)
-    #code to test whether table already exists goes here
-    #if exists, prompt to user: "Table exists. Delete?yes/no"
-    #if user input is yes, drop table. Else, use move on and use existing table
+
 
 
     statement = '''
@@ -353,10 +340,11 @@ def init_db():
 
     #close database connection
     conn.close()
-    #this function is not expected to return anything, you can modify this if you want
+
+### Adds ESRB Data to DB
 def add_esrb_ratings():
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
 
     esrb_ratings = ["RP", "EC", "E", "E10+", "T", "M", "AO"]
@@ -369,10 +357,10 @@ def add_esrb_ratings():
     conn.commit()
     conn.close()
 
-
+### Adds Genre Data to DB
 def add_genre_data():
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
 
     with open(genre_cache) as json_data:
@@ -390,9 +378,10 @@ def add_genre_data():
         conn.commit()
     conn.close()
 
+### Adds Game Data to DB
 def add_games_data():
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
 
 
@@ -422,9 +411,10 @@ def add_games_data():
         conn.commit()
     conn.close()
 
+### Adds Platform Data to DB
 def add_platform_data():
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
 
 
@@ -446,9 +436,37 @@ def add_platform_data():
              #bandaid for repeat Tweets
     conn.commit()
     conn.close()
+#### Updates Games Table for Genre names
+def update_genres():
+
+    conn = sqlite3.connect('game.db')
+    cur = conn.cursor()
+
+    statement = " UPDATE `Games` SET `Genre1` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre1) "
+    cur.execute(statement)
+    statement = " UPDATE `Games` SET `Genre2` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre2) "
+    cur.execute(statement)
+    statement = " UPDATE `Games` SET `Genre3` = (SELECT Genre.Name From Genre where Genre.Id = Games.Genre3) "
+    cur.execute(statement)
+    conn.commit()
+    conn.close()
+### Update Games Table for Ratings
+def update_ratings():
+    conn = sqlite3.connect('game.db')
+    cur = conn.cursor()
+
+    statement = " UPDATE `Games` SET `Rating` = (SELECT ESRB.Rating From ESRB where ESRB.Id = Games.Rating) "
+    cur.execute(statement)
+    conn.commit()
+
+
+##### SQL Query Functions ######
+
+
+###### Counts Releases by Rating
 def query_ratingCounts(releaseYear = None):
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
     rating_list =[]
     rating_list_count = []
@@ -472,9 +490,11 @@ def query_ratingCounts(releaseYear = None):
     combined_list = [rating_list, rating_list_count]
 
     return combined_list
+
+##### Counts Releases by Platform
 def query_platformCounts(releaseYear = None):
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
     platform_list =[]
     platform_list_count = []
@@ -497,9 +517,11 @@ def query_platformCounts(releaseYear = None):
             platform_list_count.append(x[1])
     combined_list = [platform_list, platform_list_count]
     return combined_list
+
+##### Counts Releases by Genre
 def query_genreCounts(releaseYear = None):
     # Connect to choc database
-    conn = sqlite3.connect('test.db')
+    conn = sqlite3.connect('game.db')
     cur = conn.cursor()
     genre_dictionary = {}
 
@@ -580,10 +602,9 @@ def query_genreCounts(releaseYear = None):
 
     return combined_list
 
-
-
+##### Counts Releases in General
 def query_releaseCounts(releaseYear = None, platform = False):
-        conn = sqlite3.connect('test.db')
+        conn = sqlite3.connect('game.db')
         cur = conn.cursor()
         list_of_monthly_releases = []
 
@@ -629,7 +650,11 @@ def query_releaseCounts(releaseYear = None, platform = False):
 
         return list_of_monthly_releases
 
-# get_platform_info()
+
+
+######## Plotly Functions #########
+
+#### Plots pie chart data
 def plot_pie_chart(pie_data):
 
     platform_names = pie_data[0]
@@ -685,6 +710,7 @@ def plot_pie_chart(pie_data):
     fig = dict( data=data, layout=layout )
     py.plot( fig, validate=False, filename='2017 Releases' )
 
+#### plots line chart data
 def plot_line_data(list_of_monthly_releases):
 
     data = [ dict(
@@ -789,6 +815,12 @@ def plot_line_data(list_of_monthly_releases):
     fig = dict( data=data, layout=layout )
     py.plot( fig, validate=False, filename='2017 Releases' )
 
+
+
+
+### Classes for Plotly Output ######
+
+##### Class for Line Chart
 class LineChart():
     def __init__(self, releaseYear = None):
         self.releaseYear = releaseYear
@@ -801,7 +833,7 @@ class LineChart():
 
             plot_line_data(list_of_monthly_releases)
 
-
+###Class for Platform Line Charts
 class PlatformChart(LineChart):
     def __init__(self, platform = True, releaseYear = None):
         self.platform = platform
@@ -814,6 +846,7 @@ class PlatformChart(LineChart):
             list_of_monthly_releases = query_releaseCounts(self.platform)
             plot_line_data(list_of_monthly_releases)
 
+#### Class for Pie Charts
 class PieChart():
         def __init__(self, releaseYear = None):
             self.releaseYear = releaseYear
@@ -825,6 +858,7 @@ class PieChart():
                 list_of_releases = query_platformCounts(self.releaseYear)
                 plot_pie_chart(list_of_releases)
 
+##### Class for Genre Plotly Chart
 class GenreChart(PieChart):
     def __init__(self, releaseYear = None):
 
@@ -836,6 +870,7 @@ class GenreChart(PieChart):
             list_of_genre_releases = query_genreCounts(self.releaseYear)
             plot_pie_chart(list_of_genre_releases)
 
+##### Class for Rating Plotly chart
 class RatingChart(PieChart):
     def __init__(self, releaseYear = None):
 
@@ -847,6 +882,13 @@ class RatingChart(PieChart):
             list_of_rating_releases = query_ratingCounts(self.releaseYear)
             plot_pie_chart(list_of_rating_releases)
 
+
+
+
+
+####### interactive_prompt helper functions #######
+
+#### Cleans up database
 def clean_db():
 
     init_db()
@@ -857,17 +899,17 @@ def clean_db():
     update_genres()
     update_ratings()
 
-
-
+### Runs at program start, checks if database is bad or old
 def data_checking():
     try:
         if "platform_time" in CACHE_DICTION:  #does the cache entry for platform exist?
-            if is_platform_cache_old(): # is the cache entry old?
-                # get_platform_info()
-                pass
-            else:
-                print("but here")
-                pass
+            pass
+            # if is_platform_cache_old(): # is the cache entry old?
+            #     # get_platform_info()
+            #     pass
+            # else:
+            #     print("but here")
+            #     pass
         else:
             print("WOW")
             # get_platform_info()
@@ -876,9 +918,9 @@ def data_checking():
         # get_platform_info()
 
     try:
-        if os.path.isfile("test.db"):
+        if os.path.isfile("game.db"):
             try:
-                conn = sqlite3.connect("test.db")
+                conn = sqlite3.connect("game.db")
                 cur = conn.cursor()
                 statement = 'Select Name From Games Where Genre1 = "Shooter"'
 
@@ -909,6 +951,8 @@ def data_checking():
 
 
  # Close the open file
+
+### Displays help, interactive_prompt function
 def displayHelp():
 
     print('`linechart`')
@@ -923,8 +967,13 @@ def displayHelp():
     print('`help`')
     print('     display this menu')
 
-
-
+### For Demo Testing to show relational keys
+def test_foreign_keys():
+    init_db()
+    add_games_data()
+    add_genre_data()
+    add_esrb_ratings()
+    add_platform_data()
 
 
 def interactive_prompt():
@@ -942,11 +991,14 @@ def interactive_prompt():
         if userInput == "help":
 
             displayHelp()
+        if userInput == "foreign":
+            test_foreign_keys()
+
         if userInput == "linechart":
             print("Enter the year you want to display")
-            print("You can pick from 2013-2017")
+            print("You can pick a single year from 2013-2017, or type `allyears` to check the entire DB")
             while True:
-                yearInput = input("\nEnter a Year, or type back to go pick another chart\nAdd on `-p`to get a chart by platform")
+                yearInput = input("\nEnter a Year, or type `back` to go pick another chart\nAdd on `-p`to get a chart by platform\n")
                 if yearInput == "exit":
                     sys.exit(0)
                 if yearInput == "help":
@@ -956,27 +1008,30 @@ def interactive_prompt():
                     break
                 if len(yearInput.split()) == 1:
                     if yearInput not in ["2013", "2014", "2015", "2016", "2017", "allyears"]:
-                        print("Are you sure that is a year?")
+                        print("\nAre you sure that is a year?")
                         pass
                     else:
-                        print("getting that chart for you")
+                        print("\ngetting that chart for you")
                         LineChart(releaseYear = yearInput)
-                        print("Type another year or type `back` to try another graph")
+                        print("\nType another year or type `back` to try another graph")
                 elif len(yearInput.split()) == 2:
-                    if "-p" not in yearInput.split()[1]:
-                        print("Are you sure you entered things correctly?")
+                    if yearInput.split()[0] not in ["2013", "2014", "2015", "2016", "2017", "allyears"]:
+                        print("\nAre you sure that is a year?")
+                        pass
+                    elif "-p" not in yearInput.split()[1]:
+                        print("\nAre you sure you entered things correctly?")
                         pass
                     else:
-                        print("getting that chart for you, with a dash of platform")
+                        print("\ngetting that chart for you, with a dash of platform")
                         #PlatformChart(releaseYear = yearInput)
-                        print("Type another year or type `back` to try another graph")
+                        print("\nType another year or type `back` to try another graph")
 
         if userInput == "piechart":
             print("Enter the year you want to display a piechart. The default category is by Platform")
-            print("You can pick from 2013-2017, or type `allyears` to check the entire DB")
+            print("You can pick a single year from 2013-2017, or type `allyears` to check the entire DB")
             acceptable_hooks = ["-g", "-r"]
             while True:
-                yearInput = input("\nEnter a Year, or type back to go pick another chart\nadd on ` -r` to get a chart of ratings or ` -g` for genre")
+                yearInput = input("\nEnter a Year, or type `back` to go pick another chart\nadd on ` -r` to get a chart of ratings or ` -g` for genre\n")
                 if yearInput == "exit":
                     sys.exit(0)
                 if yearInput == "help":
@@ -986,15 +1041,15 @@ def interactive_prompt():
                     break
                 if len(yearInput.split()) == 1:
                     if yearInput.split()[0] not in ["2013", "2014", "2015", "2016", "2017", "allyears"]:
-                        print("Are you sure that is a year?")
+                        print("\nAre you sure that is a year?")
                         pass
                     else:
-                        print("getting that chart for you")
+                        print("\ngetting that chart for you")
                         PieChart(releaseYear = yearInput)
-                        print("Type another year or type `back` to try another graph")
+                        print("\nType another year or type `back` to try another graph")
                 elif len(yearInput.split()) == 2:
                     if yearInput.split()[1] not in acceptable_hooks:
-                        print("Are you sure you entered things correctly?")
+                        print("\nAre you sure you entered things correctly?")
                         pass
                     else:
                         if "-g" in yearInput.split()[1]:
@@ -1004,14 +1059,7 @@ def interactive_prompt():
                         elif "-r" in yearInput.split()[1]:
                             print("getting that chart for you, with a dash of rating")
                             RatingChart(releaseYear = yearInput.split()[0])
-                            print("Type another year or type `back` to try another graph")
-
-
-
-
-
-
-
+                            print("Type another year or type `back` to try another graph") ###Interactive CLI
 
 if __name__ == "__main__":
     interactive_prompt()
